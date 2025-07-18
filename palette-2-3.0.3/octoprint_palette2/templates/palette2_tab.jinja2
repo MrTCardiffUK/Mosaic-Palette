@@ -1,0 +1,180 @@
+<div class="row">
+	<div class="distance" style="margin-left: 50px">
+			<div class="row">
+				<h4>Palette 2</h4>
+				<p>Connection Status: <span id="connection-state-msg-palette" data-bind="text: connectionStateMsg, style: { color: connected() ? '#17a078' : '#fe4141' }"></span></p>
+				<div style="margin-top: 20px">
+					<div class="serial-ports">
+						<h6 data-bind="click: displayPorts">Manually Select Port</h6>
+						<select class="serial-ports-list" data-bind="options: ports, value: selectedPort, disable: connected"></select>
+					</div>
+					<div class="p2-connect-buttons">
+						<button class="btn btn-primary connect-palette-button" data-bind="text: connectPaletteText, click: connectOmega, disable: connected"></button>
+						<button type="button" class="btn btn-primary" data-bind="text: disconnectPaletteText, click: disconnectPalette2, enable: connected"></button>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row palette-status">
+				<h4 class="palette-status-title">Status</h4>
+				<h5 class="current-status" data-bind="text: currentStatus"></h5>
+				<ul class="status-container">
+					<li class="single-status splice-amount">
+						<h5 class="single-status-title">Current Splice: </h5>
+						<span class="single-status-value current-splice" data-bind="text: currentSplice"></span>
+						<span class="single-status-value total-splices" data-bind="text: totalSplicesDisplay"></span>
+					</li>
+					<li class="single-status filament-used">
+						<h5 class="single-status-title">Filament Used: </h5>
+						<span class="single-status-value" data-bind="text: filaLengthDisplay"></span>
+					</li>
+					<li class="single-status pings-container">
+						<div class="ping-overview" data-bind="click: togglePingHistory">
+							<h5 class="single-status-title">Latest Ping: </h5>
+							<p class="current-ping">
+								Ping
+								<span class="single-status-value" data-bind="text: latestPing"></span>
+							</p>
+							<span class="separator">---</span>
+							<p class="current-ping-percentage">
+								<span class="single-status-value" data-bind="text: latestPingPercent"></span>
+							</p>
+							<div class="icon-download-container" data-bind="visible: pingsDisplay().length > 0">
+								<i class="icon-download" data-bind="click: downloadPingHistory"></i>
+							</div>
+						</div>
+						<ul class="ping-history" data-bind="visible: pingsDisplay().length > 0, foreach: pingsDisplay">
+							<li class="single-ping">
+								<p class="ping-number">
+									Ping
+									<span data-bind="text: number"></span>
+								</p>
+								<p class="ping-percent"><span class="ping-percent" data-bind="text: percent"></span></p>
+							</li>
+						</ul>
+					</li>
+					<li class="single-status pongs-container">
+						<div class="pong-overview" data-bind="click: togglePongHistory">
+							<h5 class="single-status-title">Latest Pong: </h5>
+							<p class="current-pong">
+								Pong
+								<span class="single-status-value" data-bind="text: latestPong"></span>
+							</p>
+							<span class="separator">---</span>
+							<p class="current-pong-percentage">
+								<span class="single-status-value" data-bind="text: latestPongPercent"></span>
+							</p>
+						</div>
+						<ul class="pong-history" data-bind="visible: pongsDisplay().length > 0, foreach: pongsDisplay">
+							<li class="single-pong">
+								<p class="ping-number">
+									Pong
+									<span data-bind="text: number"></span>
+								</p>
+								<p class="ping-percent"><span class="pong-percent" data-bind="text: percent"></span></p>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<hr>
+			<div class="row advanced_options" data-bind="visible: connected() && advancedOptions()">
+				<h4>Advanced Options</h4>
+				<ul class="list-advanced-options">
+						<li class="single-advanced-option ping-printer-display">
+							<div class="input-container">
+								<label class="advanced-option-title" for="ping-printer-display-input"><span>Enable Ping Display On Printer:</span></label>
+								<div class="interaction-container">
+									<input class="single-advanced-option-input" id="ping-printer-display-input" type="checkbox" data-bind="checked: showPingOnPrinter">
+									<div class="advanced-info-container">
+										<i class="material-icons advanced-info-icon" data-bind="click: toggleAdvancedOptionInfo">info_outline</i>
+										<div class="advanced-info-text" id="ping-display-info-text">
+											<h6 class="advanced-info-heading">Display latest PING information on printer screen</h6>
+											<div class="advanced-info-body"><p>By enabling this option, the latest ping information will be sent to your printer. Your printer must support M117 GCODE commands for this feature to work.<br><br><span class="contributors">Special thank you to <a target="_blank" href="https://gitlab.com/skellatore">Tim Brookman</a>.</span></p></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="single-advanced-option ping-variation-cancel">
+							<div class="input-container">
+								<label class="advanced-option-title" for="ping-variation-cancel-input"><span>Enable Cancel Print On Ping Variation:</span></label>
+								<div class="interaction-container">
+									<input class="single-advanced-option-input" id="ping-variation-cancel-input" type="checkbox" data-bind="checked: autoVariationCancelPing">
+									<div class="advanced-info-container">
+										<i class="material-icons advanced-info-icon" data-bind="click: toggleAdvancedOptionInfo">info_outline</i>
+										<div class="advanced-info-text" id="ping-variation-cancel-text">
+											<h6 class="advanced-info-heading">Automatically CANCEL print when ping variation is too large</h6>
+											<div class="advanced-info-body"><p>By enabling this option, your Hub will cancel the current print when it detects a ping that has varied beyond your accepted range from the most recent ping. A large variation may be an indication of jammed/broken filament or a partial clog in your printer's extruder. The detection will only start after your specified starting ping.<br><br><span class="contributors">Special thank you to <a target="_blank" href="https://gitlab.com/clifford.roche">Clifford Roche</a>.</span></p></div>
+										</div>
+									</div>
+								</div>
+							</div>
+								<div class="variation-input additional-options" data-bind="visible: autoVariationCancelPing">
+									<div class="input-container percent-variation">
+											<label for="variation-input"><span>Acceptable Variation Range (+/-):</span></label>
+											<div class="input-append">
+												<input id="variation-input" class="input-mini" type="number" min="1" max="100" data-bind="value: variationPct, enable: autoVariationCancelPing">
+												<span class="add-on">%</span>
+											</div>
+									</div>
+									<div class="input-container ping-start-variation">
+										<label for="variation-input-ping-start"><span>Starting Ping:</span></label>
+										<div class="input">
+											<input id="variation-input-ping-start" class="input-mini" type="number" min="1" max="5000" data-bind="value: variationPingStart, enable: autoVariationCancelPing">
+										</div>
+									</div>
+									<div class="variation-input-status" data-bind="text: variationPctStatus"></div>
+								</div>
+						</li>
+						<li class="single-advanced-option feed-rate-control">
+							<div class="input-container">
+								<label class="advanced-option-title" for="feed-rate-control-input"><span>Enable Print Speed Control During Splices:</span></label>
+								<div class="interaction-container">
+									<input class="single-advanced-option-input" id="feed-rate-control-input" type="checkbox" data-bind="checked: feedRateControl">
+									<div class="advanced-info-container">
+										<i class="material-icons advanced-info-icon" data-bind="click: toggleAdvancedOptionInfo">info_outline</i>
+										<div class="advanced-info-text" id="feed-rate-control-info-text">
+											<h6 class="advanced-info-heading">Control printer SPEED</h6>
+											<div class="advanced-info-body"><p>By enabling this option, you may adjust the filament feed rate used by your printer, both when Palette 2 is and is not splicing. Slowing down the feed rate during splices may prevent your printer from using filament faster than Palette 2 produces it.<br><br>Feed rate commands will only be applied once the print starts. Your printer must support M220 GCODE commands for this feature to work.<br><br><span class="contributors">Special thank you to <a target="_blank" href="https://gitlab.com/skellatore">Tim Brookman</a>.</span></p></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="feed-rate-control-options additional-options" data-bind="visible: feedRateControl">
+								<div class="feed-rate-speeds">
+									<div class="input-container">
+											<label for="normal-feedrate-input"><span>Normal Feed Rate:</span></label>
+											<div class="input-append">
+												<input id="normal-feedrate-input" class="input-mini" type="number" min="1" max="200" data-bind="value: feedRateNormalPct, enable: feedRateControl">
+												<span class="add-on">%</span>
+											</div>
+									</div>
+									<div class="input-container">
+										<label for="splicing-feedrate-input"><span>Splicing Feed Rate:</span></label>
+										<label>
+												<div class="input-append">
+													<input id="splicing-feedrate-input" class="input-mini" type="number" min="1" max="100" data-bind="value: feedRateSlowPct, enable: feedRateControl">
+													<span class="add-on">%</span>
+												</div>
+										</label>
+									</div>
+								</div>
+								<div class="advanced-single-status feed-rate-status-container">
+									<div class="advanced-single-status-title">Feed Rate Status: <span class="advanced-single-status-value feed-rate-status" data-bind="text: feedRateStatus">Awaiting Update..</span></div>
+								</div>
+								<div class="advanced-single-status feed-rate-slowed-container">
+									<div class="advanced-single-status-title">Feed Rate Currently Slowed? <span class="advanced-single-status-value" data-bind="text: feedRateSlowedText"></span></div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<hr>
+			</div>
+			<div class="row" style="margin-bottom: 10px">
+				<h4 class="manual-controls">Manual Controls</h4>
+				<button type="button" class="btn btn-primary" data-bind="click: sendCutCmd, enable: connected">Cut</button>
+				<button type="button" class="btn btn-primary" data-bind="click: sendClearOutCmd, enable: connected">Clear Palette 2</button>
+			</div>
+	</div>
+</div>

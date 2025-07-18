@@ -1,0 +1,7 @@
+[build-system]
+requires = [
+  "setuptools>=68",
+  "wheel",
+  "octoprint_setuptools"
+]
+build-backend = "setuptools.build_meta"
